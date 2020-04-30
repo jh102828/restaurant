@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jh.restaurant.mapper.UserMapper">
+
+    <resultMap id="userBaseResultMap" type="User">
+        <id property="uid" column="uid"/>
+        <result property="isAdmin" column="is_admin"/>
+        <result property="isValid" column="is_valid"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="userBaseResultMap">
+        SELECT uid, openid, username, password, image,
+               email, phone, address, is_admin, is_valid
+        FROM user u
+    </select>
+
+    <select id="findByStatus" resultMap="userBaseResultMap">
+        SELECT u.uid, openid, username, password, image, email,
+               phone, address, is_admin, is_valid, money
+        FROM user u
+        WHERE u.is_valid = #{status}
+    </select>
+
+    <select id="findByName" resultMap="userBaseResultMap">
+        SELECT u.username, u.password, u.openid, u.is_admin, u.is_valid
+        FROM user u
+        WHERE u.username = #{username}
+    </select>
+
+    <select id="findByOpenid" resultMap="userBaseResultMap">
+        SELECT uid, openid, username, password, image,
+               email, phone, address,money, is_admin, is_valid
+        FROM user
+        WHERE openid = #{openid}
+    </select>
+
+    <insert id="saveUser" keyProperty="uid" useGeneratedKeys="true">
+        INSERT INTO user(openid, username, password, image, email,
+                         phone, address,money, is_admin, is_valid)
+        VALUES(#{user.openid}, #{user.username}, #{user.password},
+               #{param1.image}, #{user.email}, #{user.phone},
+               #{user.address},#{user.money}, #{user.isAdmin}, #{param1.isValid})
+    </insert>
+
+    <update id="updateUser" parameterType="User">
+        UPDATE user u
+        <set>
+            <if test="user.uid != null and user.uid != ''">
+                u.uid = #{user.uid},
+            </if>
+            <if test="user.openid != null and user.openid != ''">
+                u.openid = #{user.openid},
+            </if>
+            <if test="param1.username != null and param1.username != ''">
+                u.username = #{user.username},
+            </if>
+            <if test="user.password != null and user.password != ''">
+                u.password = #{user.password},
+            </if>
+            <if test="user.image != null and user.image != ''">
+                u.image = #{user.image},
+            </if>
+            <if test="user.email != null and user.email != ''">
+                u.email = #{user.email},
+            </if>
+            <if test="user.phone != null and user.phone != ''">
+                u.phone = #{user.phone},
+            </if>
+            <if test="user.address != null and user.address != ''">
+                u.address = #{user.address},
+            </if>
+            <if test="user.money != null and user.money != ''">
+                u.money = #{user.money},
+            </if>
+            <if test="user.isAdmin != null and user.isAdmin != ''">
+                u.is_admin = #{user.isAdmin},
+            </if>
+            <if test="user.isValid != null and user.isValid != ''">
+                u.is_valid = #{user.isValid},
+            </if>
+        </set>
+        <where>
+            u.uid = #{user.uid}
+        </where>
+    </update>
+
+    <update id="deleteUser" parameterType="User">
+        UPDATE user
+        SET is_valid = 0
+        WHERE openid = #{openid}
+    </update>
+
+</mapper>

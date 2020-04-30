@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jh.restaurant.mapper.ProductMapper">
+
+    <resultMap id="baseProductResultMap" type="Product">
+        <id property="productId" column="product_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="productPrice" column="product_price"/>
+        <result property="productStock" column="product_stock"/>
+        <result property="productDescription" column="product_description"/>
+        <result property="productImage" column="product_image"/>
+        <result property="productStatus" column="product_status"/>
+        <result property="categoryType" column="category_type"/>
+    </resultMap>
+
+    <sql id="productSql">
+            product_id, product_name, product_price, product_stock,
+            product_description, product_image, product_status, category_type
+    </sql>
+
+    <select id="findProductById" resultMap="baseProductResultMap">
+        SELECT <include refid="productSql"/>
+        FROM product
+        WHERE product_id = #{productId}
+        AND product_status = 1;
+    </select>
+
+    <select id="findProductAll" resultMap="baseProductResultMap">
+        SELECT <include refid="productSql"/>
+        FROM product
+    </select>
+
+    <select id="findProductByStatus" resultMap="baseProductResultMap">
+        SELECT <include refid="productSql"/>
+        FROM product
+        WHERE product_status = #{productStatus}
+    </select>
+
+    <insert id="saveProduct">
+        INSERT INTO product(product_id, product_name, product_price, product_stock,
+        product_description, product_image, product_status, category_type)
+        VALUES (#{product.productId}, #{product.productName}, #{product.productPrice},
+        #{product.productStock}, #{product.productDescription}, #{product.productImage},
+        #{product.productStatus}, #{product.categoryType})
+    </insert>
+
+    <update id="updateProduct" parameterType="Product">
+        UPDATE product p
+        <set>
+           <if test="product.productId != null and product.productId != ''">
+               p.product_id = #{product.productId},
+           </if>
+            <if test="product.productName != null and product.productName != ''">
+                p.product_name = #{product.productName},
+            </if>
+            <if test="product.productPrice != null">
+                p.product_price = #{product.productPrice},
+            </if>
+            <if test="product.productStock != null">
+                p.product_stock = #{product.productStock},
+            </if>
+            <if test="product.productDescription != null">
+                p.product_description = #{product.productDescription},
+            </if>
+            <if test="product.productImage != null">
+                p.product_image = #{product.productImage},
+            </if>
+            <if test="product.productStatus != null">
+                p.product_status = #{product.productStatus},
+            </if>
+            <if test="product.categoryType != null and product.categoryType != ''">
+                p.category_type = #{product.categoryType},
+            </if>
+            <if test="product.createTime != null and product.createTime != ''">
+                p.create_time = #{product.createTime},
+            </if>
+            <if test="product.updateTime != null and product.updateTime != ''">
+                p.update_time = #{product.updateTime},
+            </if>
+        </set>
+        <where>
+            p.product_id = #{product.productId}
+        </where>
+    </update>
+
+    <update id="deleteProduct" parameterType="Product">
+        UPDATE product
+        SET product_status = 0
+        WHERE product_id = #{productId}
+    </update>
+
+</mapper>

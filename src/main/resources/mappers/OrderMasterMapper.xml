@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jh.restaurant.mapper.OrderMasterMapper">
+
+    <resultMap id="baseOrderMasterResultMap" type="OrderMaster">
+        <id property="orderId" column="order_id"/>
+        <result property="buyerName" column="buyer_name"/>
+        <result property="buyerPhone" column="buyer_phone"/>
+        <result property="buyerAddress" column="buyer_address"/>
+        <result property="buyerOpenid" column="buyer_openid"/>
+        <result property="orderAmount" column="order_amount"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="payStatus" column="pay_status"/>
+    </resultMap>
+
+    <select id="findOrderMasterByOpenid" resultMap="baseOrderMasterResultMap">
+        SELECT order_id, buyer_name, buyer_phone, buyer_address,
+               buyer_openid, order_amount, order_status, pay_status
+        FROM order_master
+        WHERE buyer_openid = #{openid}
+        AND order_status = #{status}
+    </select>
+
+    <insert id="saveOrderMaster" parameterType="OrderMaster">
+        INSERT INTO order_master(order_id, buyer_name, buyer_phone, buyer_address,
+                                 buyer_openid, order_amount, order_status, pay_status)
+        VALUES(#{orderMaster.orderId}, #{orderMaster.buyerName}, #{orderMaster.buyerPhone},
+               #{orderMaster.buyerAddress}, #{orderMaster.buyerOpenid}, #{orderMaster.orderAmount},
+               #{orderMaster.orderStatus},#{orderMaster.payStatus})
+    </insert>
+
+    <select id="findOrderMasterByOrderId" resultMap="baseOrderMasterResultMap">
+        SELECT order_id, buyer_name, buyer_phone, buyer_address,
+        buyer_openid, order_amount, order_status, pay_status
+        FROM order_master
+        WHERE order_id = #{orderId}
+    </select>
+</mapper>

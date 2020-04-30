@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    # druid 配置
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: root
+      url: jdbc:mysql://localhost:3306/restaurant?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      initial-size: 5
+      max-active: 20
+      min-idle: 3
+
+  mvc:
+    servlet:
+      load-on-startup: 100
+
+ # Mybatis
+mybatis:
+  # 别名
+  type-aliases-package: com.jh.restaurant.domain.entity
+  mapper-locations: classpath:mappers/**/*.xml
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+
+

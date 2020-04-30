@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jh.restaurant.mapper.OrderDetailMapper">
+
+    <resultMap id="baseOrderDetailResultMap" type="OrderDetail">
+        <id property="detailId" column="detail_id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="productPrice" column="product_price"/>
+        <result property="productQuantity" column="product_quantity"/>
+        <result property="productImage" column="product_image"/>
+    </resultMap>
+
+    <select id="findOrderDetailByOrderId" resultMap="baseOrderDetailResultMap">
+        SELECT detail_id, order_id, product_id, product_name,
+               product_price, product_quantity, product_image
+        FROM order_detail
+        WHERE order_id = #{orderId}
+    </select>
+
+    <insert id="saveOrderDetail" parameterType="OrderDetail">
+        INSERT INTO order_detail(detail_id, order_id, product_id, product_name,
+                                 product_price, product_quantity, product_image)
+        VALUES(#{orderDetail.detailId}, #{orderDetail.orderId}, #{orderDetail.productId},
+               #{orderDetail.productName}, #{orderDetail.productPrice},
+               #{orderDetail.productQuantity}, #{orderDetail.productImage})
+    </insert>
+
+</mapper>

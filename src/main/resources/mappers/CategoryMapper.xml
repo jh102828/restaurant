@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jh.restaurant.mapper.CategoryMapper">
+
+    <resultMap id="baseCategoryResultMap" type="Category">
+        <id property="categoryId" column="category_id"/>
+        <result property="categoryName" column="category_name"/>
+        <result property="categoryType" column="category_type"/>
+    </resultMap>
+
+    <select id="findCategoryByType" resultMap="baseCategoryResultMap">
+        SELECT category_id, category_name, category_type
+        FROM category
+        WHERE category_type IN
+        <foreach collection="typeList" item="type" open="(" close=")" separator=",">
+            #{type}
+        </foreach>
+    </select>
+
+    <select id="findAll" resultMap="baseCategoryResultMap">
+        SELECT category_id, category_name, category_type
+        FROM category
+    </select>
+
+</mapper>
