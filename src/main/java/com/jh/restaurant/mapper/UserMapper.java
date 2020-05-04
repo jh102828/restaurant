@@ -29,4 +29,8 @@ public interface UserMapper {
 
     int deleteUser(@Param("openid") String openid);
 
+    int unlockUser(@Param("openid") String openid);
+
+    List<User> searchUser(@Param("keyword") String keyword);
+
 }

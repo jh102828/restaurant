@@ -90,4 +90,18 @@
         WHERE openid = #{openid}
     </update>
 
+    <update id="unlockUser" parameterType="User">
+        UPDATE user
+        SET is_valid = 1
+        WHERE openid = #{openid}
+    </update>
+
+    <select id="searchUser" resultMap="userBaseResultMap">
+        SELECT u.openid, username, image, email,
+               phone, address
+        FROM user u
+        WHERE username
+        LIKE CONCAT(CONCAT('%',#{keyword}),'%')
+    </select>
+
 </mapper>

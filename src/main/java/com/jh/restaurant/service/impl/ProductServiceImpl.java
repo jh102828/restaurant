@@ -85,4 +85,14 @@ public class ProductServiceImpl implements ProductService {
             productMapper.saveProduct(product);
         }
     }
+
+    @Override
+    public int unlockProduct(String productId) {
+        return productMapper.unlockProduct(productId);
+    }
+
+    @Override
+    public List<Product> findByIds(List<String> ids) {
+        return productMapper.findByProductIds(ids);
+    }
 }

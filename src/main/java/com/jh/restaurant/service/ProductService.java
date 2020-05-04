@@ -28,4 +28,8 @@ public interface ProductService {
 
     void decreaseStock(List<Cart> cartList);
 
+    int unlockProduct(String productId);
+
+    List<Product> findByIds(List<String> ids);
+
 }

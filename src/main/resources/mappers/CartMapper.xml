@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jh.restaurant.mapper.CartMapper">
+
+    <resultMap id="baseCartResultMap" type="Cart">
+        <id property="cartId" column="cart_id"/>
+        <result property="openid" column="openid"/>
+        <result property="productId" column="product_id"/>
+        <result property="productQuantity" column="product_quantity"/>
+    </resultMap>
+
+    <sql id="cartSql">
+            cart_id,
+            openid,
+            product_id,
+            product_quantity
+    </sql>
+
+    <select id="findOne" resultMap="baseCartResultMap">
+        SELECT
+        <include refid="cartSql"/>
+        FROM cart
+        WHERE openid = #{cart.openid}
+        AND product_id = #{cart.productId}
+    </select>
+
+    <select id="findCartByOpenid" resultMap="baseCartResultMap">
+        SELECT
+        <include refid="cartSql"/>
+        FROM cart
+        WHERE openid = #{openid}
+    </select>
+
+    <update id="increaseCartNum" parameterType="Cart">
+        UPDATE cart
+        SET product_quantity = product_quantity + 1
+        WHERE openid = #{openid}
+        AND product_id = #{productId}
+    </update>
+
+    <update id="decreaseCartNum" parameterType="Cart">
+        UPDATE cart
+        SET product_quantity = product_quantity - 1
+        WHERE openid = #{openid}
+        AND product_id = #{productId}
+    </update>
+
+    <delete id="deleteCart" parameterType="Cart">
+        DELETE FROM cart
+        WHERE openid = #{cart.openid}
+        AND product_id = #{cart.productId}
+    </delete>
+
+    <insert id="saveCart" parameterType="Cart">
+        INSERT INTO cart(openid, product_id, product_quantity)
+        VALUES (#{cart.openid}, #{cart.productId}, #{cart.productQuantity})
+    </insert>
+
+</mapper>

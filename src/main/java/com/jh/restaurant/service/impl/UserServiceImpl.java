@@ -51,4 +51,19 @@ public class UserServiceImpl implements UserService {
     public int deleteUser(String openid) {
         return userMapper.deleteUser(openid);
     }
+
+    @Override
+    public int unlockUser(String openid) {
+        return userMapper.unlockUser(openid);
+    }
+
+    @Override
+    public User findOne(String openid) {
+        return userMapper.findByOpenid(openid);
+    }
+
+    @Override
+    public List<User> searchUser(String keyword) {
+        return userMapper.searchUser(keyword);
+    }
 }

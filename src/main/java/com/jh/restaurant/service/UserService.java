@@ -32,4 +32,10 @@ public interface UserService {
     List<User> findAllByStatus(int status);
 
     int deleteUser(String openid);
+
+    int unlockUser(String openid);
+
+    User findOne(String openid);
+
+    List<User> searchUser(String keyword);
 }

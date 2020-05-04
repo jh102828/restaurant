@@ -16,6 +16,8 @@ public class Cart {
 
     private Integer cartId;
 
+    private String openid;
+
     private String productId;
 
     private Integer productQuantity;

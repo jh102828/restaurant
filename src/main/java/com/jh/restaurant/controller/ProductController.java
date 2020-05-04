@@ -37,7 +37,7 @@ public class ProductController {
     private CategoryService categoryService;
 
     @GetMapping("/list")
-    public Result list(@RequestParam(value = "status", defaultValue = "0") int status) {
+    public Result list(@RequestParam(value = "status", defaultValue = "1") int status) {
 
         List<Product> productList = productService.findAllByStatus(status);
 
@@ -67,6 +67,15 @@ public class ProductController {
 
         return ResultUtil.success(categoryVOList);
 
+    }
+
+    @GetMapping("/detail")
+    public Result detail(@RequestParam("productId") String productId) {
+        Product product = productService.findOne(productId);
+        if (product != null) {
+            return ResultUtil.success(product);
+        }
+        return ResultUtil.error();
     }
 
 }

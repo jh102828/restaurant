@@ -24,4 +24,8 @@ public interface ProductMapper {
 
     int deleteProduct(@Param("productId") String productId);
 
+    int unlockProduct(@Param("productId") String productId);
+
+    List<Product> findByProductIds(@Param("ids") List<String> ids);
+
 }

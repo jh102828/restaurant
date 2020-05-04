@@ -89,4 +89,21 @@
         WHERE product_id = #{productId}
     </update>
 
+    <update id="unlockProduct" parameterType="Product">
+        UPDATE product
+        SET product_status = 1
+        WHERE product_id = #{productId}
+    </update>
+
+    <select id="findByProductIds" resultMap="baseProductResultMap">
+        SELECT product_id
+        FROM product
+        WHERE product_id IN
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+
+
 </mapper>
