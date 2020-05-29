@@ -14,7 +14,7 @@ import java.util.List;
  * @date 2020/4/18 22:28
  */
 @Data
-public class OrderForm {
+public class  OrderForm {
 
     @NotBlank(message = "姓名不能为空")
     private String name;

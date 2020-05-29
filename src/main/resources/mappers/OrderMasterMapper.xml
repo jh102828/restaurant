@@ -35,4 +35,23 @@
         FROM order_master
         WHERE order_id = #{orderId}
     </select>
+
+    <select id="findOrderMasterByStatus" resultMap="baseOrderMasterResultMap">
+        SELECT order_id, buyer_name, buyer_phone, buyer_address,
+        buyer_openid, order_amount, order_status, pay_status
+        FROM order_master
+        WHERE order_status = #{status}
+    </select>
+
+    <update id="finishOrder" parameterType="OrderMaster">
+        UPDATE order_master
+        SET order_status = 1
+        WHERE order_id = #{orderId}
+    </update>
+
+    <update id="cancelOrder" parameterType="OrderMaster">
+        UPDATE order_master
+        SET order_status = 0
+        WHERE order_id = #{orderId}
+    </update>
 </mapper>

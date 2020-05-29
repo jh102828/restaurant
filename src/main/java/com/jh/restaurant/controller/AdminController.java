@@ -1,9 +1,13 @@
 package com.jh.restaurant.controller;
 
+import com.jh.restaurant.domain.entity.OrderDetail;
+import com.jh.restaurant.domain.entity.OrderMaster;
 import com.jh.restaurant.domain.entity.Product;
 import com.jh.restaurant.domain.entity.User;
 import com.jh.restaurant.domain.vo.Result;
+import com.jh.restaurant.dto.OrderDTO;
 import com.jh.restaurant.enums.UserEnum;
+import com.jh.restaurant.service.OrderService;
 import com.jh.restaurant.service.ProductService;
 import com.jh.restaurant.service.UserService;
 import com.jh.restaurant.util.ResultUtil;
@@ -33,6 +37,9 @@ public class AdminController {
 
     @Resource
     private ProductService productService;
+
+    @Resource
+    private OrderService orderService;
 
     @GetMapping("/checkUser")
     public Result checkUser(String[] openids) {
@@ -154,4 +161,44 @@ public class AdminController {
         return ResultUtil.error();
     }
 
+    @GetMapping("/selectOrder")
+    public Result<List<OrderMaster>> selectOrder(@RequestParam(value = "status", defaultValue = "0")
+                                                 int status) {
+        List<OrderMaster> orderList = orderService.findList(status);
+        return ResultUtil.success(orderList);
+    }
+
+    @GetMapping("/finishOrder")
+    public Result finishOrder(@RequestParam("ids") String[] ids) {
+        try {
+            for (String orderId : ids) {
+                orderService.finish(orderId);
+            }
+            return ResultUtil.success();
+        } catch (Exception e) {
+            return ResultUtil.error();
+        }
+    }
+
+    @GetMapping("/cancelOrder")
+    public Result cancelOrder(@RequestParam("ids") String[] ids) {
+        try {
+            for (String orderId : ids) {
+                orderService.cancel(orderId);
+            }
+            return ResultUtil.success();
+        } catch (Exception e) {
+            return ResultUtil.error();
+        }
+    }
+
+    @GetMapping("/orderDetailList")
+    public Result orderDetailList(@RequestParam("orderId") String orderId) {
+        try {
+            List<OrderDetail> orderDetailList = orderService.getOrderDetailList(orderId);
+            return ResultUtil.success(orderDetailList);
+        } catch (Exception e) {
+            return ResultUtil.error();
+        }
+    }
 }

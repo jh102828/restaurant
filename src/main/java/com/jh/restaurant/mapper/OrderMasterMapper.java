@@ -18,4 +18,10 @@ public interface OrderMasterMapper {
     int saveOrderMaster(@Param("orderMaster") OrderMaster orderMaster);
 
     OrderMaster findOrderMasterByOrderId(@Param("orderId") String orderId);
+
+    List<OrderMaster> findOrderMasterByStatus(@Param("status") int status);
+
+    int finishOrder(@Param("orderId") String orderId);
+
+    int cancelOrder(@Param("orderId") String orderId);
 }

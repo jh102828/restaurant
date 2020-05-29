@@ -27,4 +27,5 @@
                #{orderDetail.productQuantity}, #{orderDetail.productImage})
     </insert>
 
+
 </mapper>

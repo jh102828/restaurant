@@ -62,9 +62,8 @@ public class ProductServiceImpl implements ProductService {
                 log.error("[ProductServiceImpl:increaseStock] 商品不能为空");
                 throw new MyException(ResultEnum.PRODUCT_NOT_EXIST);
             }
-            Integer stock = cart.getProductQuantity() + product.getProductStock();
-            product.setProductStock(stock);
-            productMapper.saveProduct(product);
+            int stock = cart.getProductQuantity() + product.getProductStock();
+            productMapper.updateStock(product.getProductId(),stock);
         }
     }
 
@@ -81,8 +80,7 @@ public class ProductServiceImpl implements ProductService {
                 log.error("[ProductServiceImpl:decreaseStock] 库存不足");
                 throw new MyException(ResultEnum.PRODUCT_STOCK_LOW);
             }
-            product.setProductStock(stock);
-            productMapper.saveProduct(product);
+            productMapper.updateStock(product.getProductId(),stock);
         }
     }
 

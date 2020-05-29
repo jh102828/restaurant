@@ -2,12 +2,16 @@ package com.jh.restaurant.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.jh.restaurant.converter.OrderForm2OrderDTO;
+import com.jh.restaurant.domain.entity.Cart;
+import com.jh.restaurant.domain.entity.Product;
 import com.jh.restaurant.domain.vo.Result;
 import com.jh.restaurant.dto.OrderDTO;
 import com.jh.restaurant.enums.ResultEnum;
 import com.jh.restaurant.exception.MyException;
 import com.jh.restaurant.form.OrderForm;
+import com.jh.restaurant.service.CartService;
 import com.jh.restaurant.service.OrderService;
+import com.jh.restaurant.service.ProductService;
 import com.jh.restaurant.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -16,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +37,12 @@ public class OrderController {
 
     @Resource
     private OrderService orderService;
+
+    @Resource
+    private ProductService productService;
+
+    @Resource
+    private CartService cartService;
 
     /**
      * 用户创建订单
@@ -100,6 +111,35 @@ public class OrderController {
     public Result cancel(@RequestParam("orderId") String orderId) {
         orderService.cancelOrder(orderId);
         return ResultUtil.success();
+    }
+
+    @GetMapping("/total")
+    public Result total(@RequestParam("openid") String openid,
+                        @RequestParam("productIds") String[] productIds) {
+        double totalMoney = 0.0;
+        List<String> ids = Arrays.asList(productIds);
+        List<Product> productList = productService.findByIds(ids);
+        for (Product product : productList) {
+            Cart cart = new Cart(openid, product.getProductId());
+            Cart one = cartService.findOne(cart);
+
+            totalMoney += product.getProductPrice() * one.getProductQuantity();
+        }
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setOrderAmount(totalMoney);
+        return ResultUtil.success(orderDTO);
+    }
+
+    @GetMapping("/createOrder")
+    public Result<Map<String, String>> createOrder(@RequestParam("productIds") String[] productIds,
+                                                   OrderDTO orderDTO) {
+        OrderDTO createResult = orderService.saveOrder(productIds, orderDTO);
+        System.out.println(111);
+        System.out.println(createResult);
+        Map<String, String> map = new HashMap<>(16);
+        map.put("orderId", createResult.getOrderId());
+        return ResultUtil.success(map);
+
     }
 
 

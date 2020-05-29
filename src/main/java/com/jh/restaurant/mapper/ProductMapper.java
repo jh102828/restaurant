@@ -28,4 +28,7 @@ public interface ProductMapper {
 
     List<Product> findByProductIds(@Param("ids") List<String> ids);
 
+    int updateStock(@Param("productId") String productId,
+                      @Param("stock") int stock);
+
 }

@@ -28,7 +28,7 @@ public class CartController {
 
 
     @PostMapping("/findOne")
-    public Result findOne(@RequestParam("cart") Cart cart) {
+    public Result findOne(Cart cart) {
         try {
             Cart result = cartService.findOne(cart);
             return ResultUtil.success(result);

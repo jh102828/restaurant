@@ -8,6 +8,7 @@ import com.jh.restaurant.enums.ResultEnum;
 import com.jh.restaurant.exception.MyException;
 import com.jh.restaurant.mapper.OrderDetailMapper;
 import com.jh.restaurant.mapper.OrderMasterMapper;
+import com.jh.restaurant.service.CartService;
 import com.jh.restaurant.service.OrderService;
 import com.jh.restaurant.service.ProductService;
 import com.jh.restaurant.service.UserService;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +38,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private CartService cartService;
 
     @Resource
     private OrderDetailMapper orderDetailMapper;
@@ -163,7 +169,58 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> findList() {
-        return null;
+    public List<OrderMaster> findList(int status) {
+        return orderMasterMapper.findOrderMasterByStatus(status);
+    }
+
+
+    @Override
+    public OrderDTO saveOrder(String[] productIds, OrderDTO orderDTO) {
+
+        String orderId = KeyUtil.getUniqueKey();
+        double totalMoney = 0.0d;
+        List<String> ids = Arrays.asList(productIds);
+        List<Product> productList = productService.findByIds(ids);
+        List<Cart> cartList = new ArrayList<>();
+        for (Product product : productList) {
+            Cart one = new Cart(orderDTO.getBuyerOpenid(), product.getProductId());
+            Cart cart = cartService.findOne(one);
+            cartList.add(cart);
+            // 计算订单总价
+            totalMoney += product.getProductPrice() * cart.getProductQuantity();
+            // orderDetail入库
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrderId(orderId);
+            orderDetail.setDetailId(KeyUtil.getUniqueKey());
+            BeanUtils.copyProperties(product,orderDetail);
+            orderDetail.setProductQuantity(cart.getProductQuantity());
+            orderDetailMapper.saveOrderDetail(orderDetail);
+        }
+        OrderMaster orderMaster = new OrderMaster();
+        orderDTO.setOrderId(orderId);
+        BeanUtils.copyProperties(orderDTO, orderMaster);
+        orderMaster.setOrderAmount(totalMoney);
+        orderMaster.setOrderStatus(OrderStatusEnum.NEW.getCode());
+        orderMaster.setPayStatus(PayStatusEnum.WAIT.getCode());
+        orderMasterMapper.saveOrderMaster(orderMaster);
+        // 商品扣库存
+        productService.decreaseStock(cartList);
+
+        return orderDTO;
+    }
+
+    @Override
+    public int finish(String orderId) {
+        return orderMasterMapper.finishOrder(orderId);
+    }
+
+    @Override
+    public int cancel(String orderId) {
+        return orderMasterMapper.cancelOrder(orderId);
+    }
+
+    @Override
+    public List<OrderDetail> getOrderDetailList(String orderId) {
+        return orderDetailMapper.findOrderDetailByOrderId(orderId);
     }
 }

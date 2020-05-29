@@ -96,13 +96,19 @@
     </update>
 
     <select id="findByProductIds" resultMap="baseProductResultMap">
-        SELECT product_id
+        SELECT <include refid="productSql"/>
         FROM product
         WHERE product_id IN
         <foreach collection="ids" item="id" open="(" close=")" separator=",">
             #{id}
         </foreach>
     </select>
+
+    <update id="updateStock">
+        UPDATE product
+        SET product_stock = #{stock}
+        WHERE product_id = #{productId}
+    </update>
 
 
 

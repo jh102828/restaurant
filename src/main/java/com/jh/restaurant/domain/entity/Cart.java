@@ -26,4 +26,9 @@ public class Cart {
         this.productId = productId;
         this.productQuantity = productQuantity;
     }
+
+    public Cart(String openid, String productId) {
+        this.openid = openid;
+        this.productId = productId;
+    }
 }

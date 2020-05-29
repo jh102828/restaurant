@@ -1,6 +1,7 @@
 package com.jh.restaurant.service;
 
 import com.jh.restaurant.domain.entity.OrderDetail;
+import com.jh.restaurant.domain.entity.OrderMaster;
 import com.jh.restaurant.dto.OrderDTO;
 
 import java.util.List;
@@ -24,6 +25,14 @@ public interface OrderService {
 
     List<OrderDTO> findList(String openid);
 
-    List<OrderDTO> findList();
+    List<OrderMaster> findList(int status);
+
+    OrderDTO saveOrder(String[] productIds, OrderDTO orderDTO);
+
+    int finish(String orderId);
+
+    int cancel(String orderId);
+
+    List<OrderDetail> getOrderDetailList(String orderId);
 
 }
